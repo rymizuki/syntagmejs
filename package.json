@@ -6,7 +6,7 @@
     "build": "gulp",
     "coverage": "gulp coverage && cat ./coverage/lcov.info | codeclimate-test-reporter && rm -rf ./coverage",
     "start": "gulp watch",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "gulp test"
   },
   "author": "mizuki_r",
   "license": "MIT",
