@@ -1,0 +1,38 @@
+{
+  "name": "syntagmejs",
+  "version": "0.0.0",
+  "main": "script/syntagme/index.js",
+  "scripts": {
+    "build": "gulp",
+    "coverage": "gulp coverage && cat ./coverage/lcov.info | codeclimate-test-reporter && rm -rf ./coverage",
+    "start": "gulp watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "description": "",
+  "devDependencies": {
+    "babel-core": "^6.7.2",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.6.0",
+    "codeclimate-test-reporter": "^0.3.1",
+    "gulp": "^3.9.1",
+    "gulp-istanbul": "^0.10.3",
+    "gulp-karma": "0.0.5",
+    "istanbul": "^0.4.2",
+    "karma": "^0.13.22",
+    "karma-chrome-launcher": "^0.2.2",
+    "karma-growl-reporter": "^0.1.1",
+    "karma-mocha": "^0.2.2",
+    "karma-phantomjs-launcher": "^1.0.0",
+    "karma-safari-launcher": "^0.1.1",
+    "karma-spec-reporter": "0.0.24",
+    "mocha": "^2.4.5",
+    "phantomjs-prebuilt": "^2.1.6",
+    "power-assert": "^1.3.1",
+    "q": "^1.4.1",
+    "sinon-browser-only": "^1.12.1",
+    "webpack": "^1.12.14",
+    "webpack-stream": "^3.1.0"
+  }
+}

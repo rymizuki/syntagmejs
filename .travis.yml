@@ -1,0 +1,7 @@
+language: node_js
+node_js:
+  - v0.12
+  - v4.0
+  - v4.2
+after_script:
+  - npm run coverage
