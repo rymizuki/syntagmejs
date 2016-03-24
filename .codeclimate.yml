@@ -12,6 +12,6 @@ engines:
       - javascript
 ratings:
   paths:
-  - src/
+  - script/
 exclude_paths:
 - test/**/*
