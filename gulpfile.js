@@ -48,8 +48,14 @@ gulp.task('coverage', function (done) {
           action:     'run',
           browsers:   ['PhantomJS'],
         }))
-        .pipe(istanbul.writeReports())
+        .pipe(istanbul.writeReports({dir: './coverage/report'}))
     })
+})
+
+gulp.task('codacy', ['coverage'], function () {
+  var codacy = require('gulp-codacy')
+  gulp.src(['./coverage/report/lcov.info'], {read: false})
+    .pipe(codacy({token: '8158b10d7d004160bda0be54412f3a1d'}))
 })
 
 gulp.task('watch', ['test-browsers'], function () {

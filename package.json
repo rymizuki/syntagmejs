@@ -4,7 +4,7 @@
   "main": "script/syntagme/index.js",
   "scripts": {
     "build": "gulp",
-    "coverage": "gulp coverage && cat ./coverage/lcov.info | codeclimate-test-reporter && rm -rf ./coverage",
+    "coverage": "gulp codacy && rm -rf ./coverage",
     "start": "gulp watch",
     "test": "gulp test"
   },
@@ -18,6 +18,7 @@
     "codeclimate-test-reporter": "^0.3.1",
     "coffee-script": "^1.10.0",
     "gulp": "^3.9.1",
+    "gulp-codacy": "^1.0.0",
     "gulp-istanbul": "^0.10.3",
     "gulp-karma": "0.0.5",
     "istanbul": "^0.4.2",
