@@ -4,7 +4,7 @@
   "main": "script/syntagme/index.js",
   "scripts": {
     "build": "gulp",
-    "coverage": "gulp codacy && rm -rf ./coverage",
+    "coverage": "gulp coverage && cat ./coverage/lcov.info | codacy-coverage && rm -rf ./coverage",
     "start": "gulp watch",
     "test": "gulp test"
   },
