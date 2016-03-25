@@ -70,6 +70,6 @@ module.exports = (config) ->
     coverageReporter:
       reporters: [
         { type: 'text' },
-        { type: 'lcov' },
+        { type: 'lcov', subdir: 'report-lcov' },
       ]
 
