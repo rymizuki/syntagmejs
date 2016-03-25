@@ -1,3 +1,5 @@
+var syntagme = require('syntagme')
+
 describe('syntagme.reducer', function () {
   beforeEach(function () {
     this.syntagme = syntagme()

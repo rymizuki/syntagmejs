@@ -1,3 +1,5 @@
+var syntagme = require('syntagme')
+
 describe('syntagme', function () {
   var stuff
   beforeEach(function () {

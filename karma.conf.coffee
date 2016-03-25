@@ -20,6 +20,8 @@ module.exports = (config) ->
     # preprocess matching files before serving them to the browser
     # available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
+      'test/index.js': ['webpack', 'coverage']
+      'test/**/*-spec.js': ['coverage']
     }
 
     # test results reporter to use
@@ -28,6 +30,7 @@ module.exports = (config) ->
     reporters: [
       "spec"
       "growl"
+      "coverage"
     ]
 
     # web server port
@@ -54,3 +57,19 @@ module.exports = (config) ->
     # Continuous Integration mode
     # if true, Karma captures browsers, runs the tests and exits
     singleRun: false
+
+    webpack:
+      resolve:
+        extensions: ['', '.js']
+        modulesDirectories: ['script']
+      module:
+        loaders: [
+          {test: /\.js$/, exclude: /node_modules/, loader: 'babel?presets[]=es2015'}
+        ]
+
+    coverageReporter:
+      reporters: [
+        { type: 'text' },
+        { type: 'lcov' },
+      ]
+

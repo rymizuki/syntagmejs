@@ -4,8 +4,7 @@ var test_files = [
   'node_modules/sinon-browser-only/sinon.js',
   'node_modules/power-assert/build/power-assert.js',
   'node_modules/q/q.js',
-  'syntagme.js',
-  'test/**/*.js',
+  'test/index.js',
 ]
 
 gulp.task('script', function () {
@@ -34,22 +33,6 @@ gulp.task('test-browsers', function () {
       action: 'watch',
       browsers: ['PhantomJS', 'Chrome', 'Safari'],
     }))
-})
-
-gulp.task('coverage', function (done) {
-  var istanbul = require('gulp-istanbul')
-  var karma    = require('gulp-karma')
-  gulp.src(['syntagme.js'])
-    .pipe(istanbul({includeUntested: true}))
-    .on('finish', function () {
-      gulp.src(test_files)
-        .pipe(karma({
-          configFile: __dirname + '/karma.conf.coffee',
-          action:     'run',
-          browsers:   ['PhantomJS'],
-        }))
-        .pipe(istanbul.writeReports())
-    })
 })
 
 gulp.task('watch', ['test-browsers'], function () {
