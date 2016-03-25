@@ -35,6 +35,12 @@ gulp.task('test-browsers', function () {
     }))
 })
 
+gulp.task('examples', function () {
+  var webserver = require('gulp-webserver')
+  gulp.src('examples', {read: false})
+    .pipe(webserver())
+})
+
 gulp.task('watch', ['test-browsers'], function () {
   gulp.watch('script/**/*', ['script'])
 })

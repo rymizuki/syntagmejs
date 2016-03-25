@@ -20,6 +20,7 @@
     "coffee-script": "^1.10.0",
     "gulp": "^3.9.1",
     "gulp-karma": "0.0.5",
+    "gulp-webserver": "^0.9.1",
     "istanbul": "^0.4.2",
     "istanbul-instrumenter-loader": "^0.2.0",
     "karma": "^0.13.22",
