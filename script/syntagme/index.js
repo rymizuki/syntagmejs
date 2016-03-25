@@ -18,18 +18,19 @@ class Syntagme {
   subscribe(fn) {
     this.store.subscribe(fn)
   }
-  dispatch (payload) {
-    this.dispatcher.dispatch(payload)
-  }
-  createAction (type, fn) {
-    return createAction.call(this, type, fn)
-  }
-  ac (type, fn) {
-    return this.createAction(type, fn)
-  }
   reducer (reducer) {
     return this.store.reducer(reducer)
   }
+  dispatch (payload) {
+    this.dispatcher.dispatch(payload)
+  }
+  handleAction (type, fn) {
+    return createAction.call(this, type, fn)
+  }
+  ac (type, fn) {
+    return this.handleAction(type, fn)
+  }
+
 }
 
 function syntagme () {

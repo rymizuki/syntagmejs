@@ -106,24 +106,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.store.subscribe(fn);
 	    }
 	  }, {
+	    key: 'reducer',
+	    value: function reducer(_reducer) {
+	      return this.store.reducer(_reducer);
+	    }
+	  }, {
 	    key: 'dispatch',
 	    value: function dispatch(payload) {
 	      this.dispatcher.dispatch(payload);
 	    }
 	  }, {
-	    key: 'createAction',
-	    value: function createAction(type, fn) {
+	    key: 'handleAction',
+	    value: function handleAction(type, fn) {
 	      return _actionCreator2.default.call(this, type, fn);
 	    }
 	  }, {
 	    key: 'ac',
 	    value: function ac(type, fn) {
-	      return this.createAction(type, fn);
-	    }
-	  }, {
-	    key: 'reducer',
-	    value: function reducer(_reducer) {
-	      return this.store.reducer(_reducer);
+	      return this.handleAction(type, fn);
 	    }
 	  }]);
 
@@ -163,13 +163,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  _createClass(Dispatcher, [{
 	    key: 'dispatch',
 	    value: function dispatch(payload) {
-	      console.debug('[DISPATCHER]', payload.source, payload.action.type, payload);
-	      if (payload.action.type == null) {
-	        throw new Error('Action type is not defined!');
+	      if (payload.action == null || payload.action.type == null) {
+	        throw new Error('ActionType is not defined!');
 	      }
 	      if (dispatching_fg) {
-	        throw new Error('Dispatcher in progress');
+	        throw new Error('Dispatcher in progress.\n "' + payload.action.type + '" cannot dispatch.');
 	      }
+	      console.debug('[DISPATCHER]', payload.source, payload.action.type, payload);
 	      try {
 	        dispatching_fg = true;
 	        for (var i = 0; i < this.handlers.length; i++) {
