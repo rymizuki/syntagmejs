@@ -20,8 +20,8 @@ function includes (array, element) {
     var currentElement;
     while (k < len) {
       currentElement = O[k];
-      if (searchElement === currentElement ||
-         (searchElement !== searchElement && currentElement !== currentElement)) { // NaN !== NaN
+      if (element === currentElement ||
+         (element !== element && currentElement !== currentElement)) { // NaN !== NaN
         return true;
       }
       k++;
@@ -48,15 +48,16 @@ export default class Store {
     this.listeners.push(fn)
   }
   handle (payload) {
-    var state = null
+    var current_state = null
     for (let i = 0; i < this.reducers.length; i++) {
-      let previous_state = state || this.state
-      state = this.reducers[i](payload, previous_state)
+      let previous_state = current_state || this.state
+      let state = this.reducers[i](payload, previous_state)
+      if (state) current_state = state
     }
-    if (this.state != state) {
-      this.state = state
+    if (this.state != current_state) {
+      this.state = current_state
       for (let i = 0; i < this.listeners.length; i++) {
-        this.listeners[i](state)
+        this.listeners[i](current_state)
       }
     }
   }

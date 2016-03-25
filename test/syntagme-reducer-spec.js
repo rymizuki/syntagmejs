@@ -37,7 +37,56 @@ describe('syntagme.reducer', function () {
       })
     })
   })
-  describe('multi reduce', function () {
+  describe('multiple reduce', function () {
+    var subscriber
+    beforeEach(function () {
+      subscriber = sinon.stub()
+      this.syntagme.subscribe(subscriber)
+      this.syntagme.reducer(function (payload, previous) {
+        if (payload.action.type !== 'TEST_1') return
+        previous || (previous = {})
+        var data = previous
+        data.reducer1 = true
+        data.count    = 1
+        return data
+      }),
+      this.syntagme.reducer(function (payload, previous) {
+        if (payload.action.type !== 'TEST_2') return
+        previous || (previous = {})
+        var data = previous
+        data.reducer2 = true
+        data.count    = 2
+        return data
+      })
+    })
+    describe('when handled action', function () {
+      beforeEach(function () {
+        this.syntagme.dispatch({
+          source: 'ACTION',
+          action: { type: 'TEST_1', count: 1, },
+        })
+      this.syntagme.dispatch({
+          source: 'ACTION',
+          action: { type: 'TEST_2', count: 1, },
+        })
+      })
+      describe('called', function () {
+        it('should be true', function () {
+          assert.ok(subscriber.calledOnce)
+        })
+      })
+      describe('state', function () {
+        it('should be reduced', function () {
+          assert.deepEqual({
+            reducer1: true,
+            reducer2: true,
+            count: 2,
+          }, subscriber.args[0][0])
+        })
+      })
+    })
+  })
+  describe('order reduce', function () {
     var subscriber
     beforeEach(function () {
       subscriber = sinon.stub()

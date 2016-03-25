@@ -231,7 +231,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var currentElement;
 	    while (k < len) {
 	      currentElement = O[k];
-	      if (searchElement === currentElement || searchElement !== searchElement && currentElement !== currentElement) {
+	      if (element === currentElement || element !== element && currentElement !== currentElement) {
 	        // NaN !== NaN
 	        return true;
 	      }
@@ -266,15 +266,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'handle',
 	    value: function handle(payload) {
-	      var state = null;
+	      var current_state = null;
 	      for (var i = 0; i < this.reducers.length; i++) {
-	        var previous_state = state || this.state;
-	        state = this.reducers[i](payload, previous_state);
+	        var previous_state = current_state || this.state;
+	        var state = this.reducers[i](payload, previous_state);
+	        if (state) current_state = state;
 	      }
-	      if (this.state != state) {
-	        this.state = state;
+	      if (this.state != current_state) {
+	        this.state = current_state;
 	        for (var _i = 0; _i < this.listeners.length; _i++) {
-	          this.listeners[_i](state);
+	          this.listeners[_i](current_state);
 	        }
 	      }
 	    }
