@@ -27,13 +27,13 @@ flux.reducer(function textReducer (payload, previous) {
 
 var ac = (function () {
   function add (text) {
-    flux.ac('ADD_TODO',     function () { return {item: {title: text}} })
+    flux.ac('ADD_TODO', {item: {title: text}})
   }
   function edit (value) {
-    flux.ac('INPUT_TEXT',   function () { return {text: value} })
+    flux.ac('INPUT_TEXT', {text: value})
   }
   function toggle (item) {
-    flux.ac('TOGGLE_STATE', function () { return {item: item} })
+    flux.ac('TOGGLE_STATE', {item: item})
   }
   return { add: add, edit: edit, toggle: toggle, }
 }())

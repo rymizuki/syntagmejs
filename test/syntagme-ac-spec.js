@@ -8,28 +8,43 @@ describe('syntagme.ac', function () {
     sinon.stub(this.syntagme, 'dispatch')
   })
 
-  describe('single action', function () {
-    describe('styntagme.dispatch', function () {
-      beforeEach(function () {
-        this.syntagme.ac('TEST', function () {
-          return {name: 'a'}
-        })
+  describe('args typeof string', function () {
+    it('should be throws', function () {
+      assert.throws(() => {
+        this.syntagme.ac('TEST', 'action')
+      }, /Action must be Object or Function/)
+    })
+  })
+  describe('args typeof array', function () {
+    it('should be throws', function () {
+      assert.throws(() => {
+        this.syntagme.ac('TEST', [{name: 'a'}])
+      }, /Action must be Object or Function/)
+    })
+  })
+  describe('args object', function () {
+    beforeEach(function () {
+      this.syntagme.ac('TEST', {name: 'a'})
+    })
+    it('should be true', function () {
+      assert.ok(this.syntagme.dispatch.calledOnce)
+    })
+    describe('action.type', function () {
+      it('should be "TEST"', function () {
+        assert.equal('TEST', this.syntagme.dispatch.args[0][0].action.type)
       })
-      it('should be true', function () {
-        assert.ok(this.syntagme.dispatch.calledOnce)
+    })
+    describe('action.name', function () {
+      it('should be "a"', function () {
+        assert.equal('a', this.syntagme.dispatch.args[0][0].action.name)
       })
-
-      describe('action.type', function () {
-        it('should be "TEST"', function () {
-          assert.equal('TEST', this.syntagme.dispatch.args[0][0].action.type)
-        })
-      })
-
-      describe('action.name', function () {
-        it('should be "a"', function () {
-          assert.equal('a', this.syntagme.dispatch.args[0][0].action.name)
-        })
-      })
+    })
+  })
+  describe('args not promisify function', function () {
+    it('should be throws', function () {
+      assert.throws(() => {
+        this.syntagme.ac('TEST', function () { return null })
+      }, /Action must be return promise object/)
     })
   })
   describe('promise action', function () {
@@ -42,7 +57,6 @@ describe('syntagme.ac', function () {
             })
           })
         })
-
         describe('called twice', function () {
           it('should be true', function () {
             assert.equal(2, this.syntagme.dispatch.callCount)
@@ -52,7 +66,7 @@ describe('syntagme.ac', function () {
           describe('action', function () {
             it('should be "TEST"', function () {
               assert.deepEqual({
-                source: "ACTION",
+                source: "ASYNC_ACTION",
                 action: { type: "TEST" }
               }, this.syntagme.dispatch.args[0][0])
             })
@@ -62,7 +76,7 @@ describe('syntagme.ac', function () {
           describe('action', function () {
             it('should be "TEST"', function () {
               assert.deepEqual({
-                source: "ACTION_RESOLVE",
+                source: "ASYNC_ACTION_RESOLVE",
                 action: {
                   type: "TEST_RESOLVE",
                   name: "a",
@@ -88,7 +102,7 @@ describe('syntagme.ac', function () {
         describe('initial action', function () {
           it('should be "TEST"', function () {
             assert.deepEqual({
-              source: 'ACTION',
+              source: 'ASYNC_ACTION',
               action: { type: 'TEST' },
             }, this.syntagme.dispatch.args[0][0])
           })
@@ -96,7 +110,7 @@ describe('syntagme.ac', function () {
         describe('reject action', function () {
           it('should be TEST_REJECT', function () {
             assert.deepEqual({
-              source: 'ACTION_REJECT',
+              source: 'ASYNC_ACTION_REJECT',
               action: {
                 type: 'TEST_REJECT',
                 rejection: { name: 'a' },

@@ -19,7 +19,7 @@ import syntagme from 'syntagme'
 syntagme.reducer(function counterReducer (payload, previous_state={}) {
   switch (payload.action.type) {
     case 'INCREMENT':
-      return Object.assign({}, previous_state, { count: (previous_state.count || 0) + 1 })
+      return Object.assign({}, previous_state, { count: payload.action.value + 1 })
   }
 })
 
@@ -27,7 +27,7 @@ syntagme.subscribe(function listener (state) {
   console.log('count:', state.count)
 })
 
-syntagme.ac('INCREMENT') // count: 1
+syntagme.ac('INCREMENT', {value: 1}) // count: 2
 ```
 
 ### Promise on ActionCreator
@@ -65,7 +65,7 @@ syntagme.ac('FETCH', function createAction () {
 
 ### syntagme.reducer(reducer)
 
-### syntagme.ac(action_type [, fn])
+### syntagme.ac(action_type [, object|promisify])
 
 ## License
 

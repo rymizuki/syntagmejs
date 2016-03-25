@@ -334,37 +334,46 @@ return /******/ (function(modules) { // webpackBootstrap
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
 	exports.default = actionCreator;
-	function actionCreator(type, fn) {
+	function actionCreator(type, stuff) {
 	  var _this = this;
 
-	  var result = fn();
-	  if (result && 'function' == typeof result.then) {
+	  if ('function' === typeof stuff) {
 	    this.dispatch({
-	      source: 'ACTION',
+	      source: 'ASYNC_ACTION',
 	      action: { type: type }
 	    });
+	    var result = stuff();
+	    if (null == result || 'function' !== typeof result.then) {
+	      throw new Error('Action must be return promise object.');
+	    }
 	    return result.then(function (action) {
 	      if (null == action.type) {
 	        action.type = type + _this.config.prefix.RESOLVE;
 	      }
 	      _this.dispatch({
-	        source: 'ACTION_RESOLVE',
+	        source: 'ASYNC_ACTION_RESOLVE',
 	        action: action
 	      });
 	      return action;
 	    }).catch(function (rejection) {
 	      _this.dispatch({
-	        source: 'ACTION_REJECT',
+	        source: 'ASYNC_ACTION_REJECT',
 	        action: { type: type + _this.config.prefix.REJECT, rejection: rejection }
 	      });
 	      return rejection;
 	    });
 	  } else {
-	    if (null == result.type) {
-	      result.type = type;
+	    if ('object' !== (typeof stuff === 'undefined' ? 'undefined' : _typeof(stuff)) || Array.isArray(stuff)) {
+	      throw new Error('Action must be Object or Function.');
 	    }
-	    this.dispatch({ source: 'ACTION', action: result });
+	    if (null == stuff.type) {
+	      stuff.type = type;
+	    }
+	    this.dispatch({ source: 'ACTION', action: stuff });
 	  }
 	  return result;
 	}
