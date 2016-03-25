@@ -61,8 +61,6 @@ syntagme.ac('FETCH', function createAction () {
 
 ## Documentation
 
-### syntagme.connect()
-
 ### syntagme.subscribe(listener)
 
 ### syntagme.reducer(reducer)
