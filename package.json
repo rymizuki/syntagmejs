@@ -1,5 +1,5 @@
 {
-  "name": "syntagmejs",
+  "name": "syntagme",
   "version": "0.0.0",
   "main": "script/syntagme/index.js",
   "scripts": {
