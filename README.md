@@ -24,6 +24,7 @@ app.reducer(function counterReducer (payload, previous_state={}) {
       return Object.assign({}, previous_state, { count: payload.action.value + 1 })
   }
 })
+app.listen()
 
 app.subscribe(function listener (state) {
   console.log('count:', state.count)
@@ -49,6 +50,7 @@ app.reducer(function actionReducer (payload, previous_state={}) {
       return Object.assign({}, previous_state, {error: payload.action.rejection, loading: false, data: null})
   }
 })
+app.listen()
 
 app.subscribe(function listener (state) {
   console.log('count:', state.count)
