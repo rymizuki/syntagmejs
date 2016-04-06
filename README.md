@@ -16,18 +16,20 @@ Syntagme is a flux's flamework.
 ```javascript
 import syntagme from 'syntagme'
 
-syntagme.reducer(function counterReducer (payload, previous_state={}) {
+const app = syntagme()
+
+app.reducer(function counterReducer (payload, previous_state={}) {
   switch (payload.action.type) {
     case 'INCREMENT':
       return Object.assign({}, previous_state, { count: payload.action.value + 1 })
   }
 })
 
-syntagme.subscribe(function listener (state) {
+app.subscribe(function listener (state) {
   console.log('count:', state.count)
 })
 
-syntagme.ac('INCREMENT', {value: 1}) // count: 2
+app.ac('INCREMENT', {value: 1}) // count: 2
 ```
 
 ### Promise on ActionCreator
@@ -35,7 +37,9 @@ syntagme.ac('INCREMENT', {value: 1}) // count: 2
 ```javascript
 import syntagme from 'syntagme'
 
-syntagme.reducer(function actionReducer (payload, previous_state={}) {
+const app = syntagme()
+
+app.reducer(function actionReducer (payload, previous_state={}) {
   switch (payload.action.type) {
     case 'FETCH':
       return Object.assign({}, previous_state, {error: null, loading: true})
@@ -46,11 +50,11 @@ syntagme.reducer(function actionReducer (payload, previous_state={}) {
   }
 })
 
-syntagme.subscribe(function listener (state) {
+app.subscribe(function listener (state) {
   console.log('count:', state.count)
 })
 
-syntagme.ac('FETCH', function createAction () {
+app.ac('FETCH', function createAction () {
   return new Promise((resolve, reject) => {
     repository.fetch()
       .then((response)   => { resolve({data: response.data}) })
@@ -61,11 +65,11 @@ syntagme.ac('FETCH', function createAction () {
 
 ## Documentation
 
-### syntagme.subscribe(listener)
+### app.subscribe(listener)
 
-### syntagme.reducer(reducer)
+### app.reducer(reducer)
 
-### syntagme.ac(action_type [, object|promisify])
+### app.ac(action_type [, object|promisify])
 
 ## License
 
