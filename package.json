@@ -1,7 +1,7 @@
 {
   "name": "syntagme",
   "version": "0.0.0",
-  "main": "script/syntagme/index.js",
+  "main": "syntagme.js",
   "scripts": {
     "build": "gulp",
     "coverage": "cat ./coverage/report-lcov/lcov.info | codacy-coverage && rm -rf ./coverage",
