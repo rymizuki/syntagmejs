@@ -6,13 +6,17 @@ describe('syntagme.reducer', function () {
   })
   describe('single reduce', function () {
     var subscriber
-    beforeEach(function () {
+    beforeEach(function (done) {
       subscriber = sinon.stub()
       this.syntagme.subscribe(subscriber)
       this.syntagme.reducer(function (payload, previous) {
         previous || (previous = {})
-        return { count: (previous.count || 0) + payload.action.count }
+        if (payload.action.type == 'TEST')
+          return { count: (previous.count || 0) + payload.action.count }
+        else
+          return previous
       })
+      this.syntagme.listen(done)
     })
     describe('when handled', function () {
       describe('subscriber', function () {
@@ -24,14 +28,14 @@ describe('syntagme.reducer', function () {
         })
         describe('called', function () {
           it('should be true', function () {
-            assert.ok(subscriber.calledOnce)
+            assert.ok(subscriber.calledTwice)
           })
         })
         describe('state', function () {
           it('should be reduced', function () {
             assert.deepEqual({
               count: 1
-            }, subscriber.args[0][0])
+            }, subscriber.args[1][0])
           })
         })
       })
@@ -39,7 +43,7 @@ describe('syntagme.reducer', function () {
   })
   describe('multiple reduce', function () {
     var subscriber
-    beforeEach(function () {
+    beforeEach(function (done) {
       subscriber = sinon.stub()
       this.syntagme.subscribe(subscriber)
       this.syntagme.reducer(function (payload, previous) {
@@ -58,6 +62,7 @@ describe('syntagme.reducer', function () {
         data.count    = 2
         return data
       })
+      this.syntagme.listen(done)
     })
     describe('when handled action', function () {
       beforeEach(function () {
@@ -88,7 +93,7 @@ describe('syntagme.reducer', function () {
   })
   describe('order reduce', function () {
     var subscriber
-    beforeEach(function () {
+    beforeEach(function (done) {
       subscriber = sinon.stub()
       this.syntagme.subscribe(subscriber)
       this.syntagme.reducer([
@@ -114,6 +119,7 @@ describe('syntagme.reducer', function () {
           return data
         }
       ])
+      this.syntagme.listen(done)
     })
     describe('when handled action', function () {
       beforeEach(function () {

@@ -92,6 +92,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.dispatcher = args.dispatcher || new _dispatcher2.default();
 	    this.utils = _utils2.default;
 	    this.config = _config2.default;
+	    this.listening_fg = false;
 	    this.connect();
 	  }
 
@@ -99,11 +100,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	    key: 'connect',
 	    value: function connect() {
 	      this.dispatcher.register(this.store.handle.bind(this.store));
+	      this.connected_fg = true;
 	    }
 	  }, {
 	    key: 'subscribe',
 	    value: function subscribe(fn) {
 	      this.store.subscribe(fn);
+	    }
+	  }, {
+	    key: 'listen',
+	    value: function listen(cb) {
+	      var _this = this;
+
+	      this.store.listen(function () {
+	        _this.listening_fg = true;
+	        _this.dispatcher.dispatch({ source: 'SYNTAGME', action: { type: 'INIT' } });
+	        if (cb) cb.call(null);
+	      });
 	    }
 	  }, {
 	    key: 'reducer',
@@ -113,6 +126,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'dispatch',
 	    value: function dispatch(payload) {
+	      if (!this.listening_fg) {
+	        throw new Error('syntagme was not listening. call `app.listen()`');
+	      }
 	      this.dispatcher.dispatch(payload);
 	    }
 	  }, {
@@ -254,14 +270,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function Store() {
 	    _classCallCheck(this, Store);
 
-	    this.listeners = [];
+	    this.subscribers = [];
 	    this.reducers = [];
 	  }
 
 	  _createClass(Store, [{
 	    key: 'subscribe',
 	    value: function subscribe(fn) {
-	      this.listeners.push(fn);
+	      this.subscribers.push(fn);
 	    }
 	  }, {
 	    key: 'handle',
@@ -274,8 +290,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	      if (this.state != current_state) {
 	        this.state = current_state;
-	        for (var _i = 0; _i < this.listeners.length; _i++) {
-	          this.listeners[_i](current_state);
+	        for (var _i = 0; _i < this.subscribers.length; _i++) {
+	          this.subscribers[_i](current_state);
 	        }
 	      }
 	    }
@@ -296,6 +312,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      }
 	      this.reducers = this.reducers.concat(reducers);
 	      return reducers;
+	    }
+	  }, {
+	    key: 'listen',
+	    value: function listen(cb) {
+	      if (cb) cb.call(null);
 	    }
 	  }, {
 	    key: 'getState',

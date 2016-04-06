@@ -41,11 +41,11 @@ function remove (array, element) {
 
 export default class Store {
   constructor () {
-    this.listeners = []
+    this.subscribers = []
     this.reducers  = []
   }
   subscribe (fn) {
-    this.listeners.push(fn)
+    this.subscribers.push(fn)
   }
   handle (payload) {
     var current_state = null
@@ -56,8 +56,8 @@ export default class Store {
     }
     if (this.state != current_state) {
       this.state = current_state
-      for (let i = 0; i < this.listeners.length; i++) {
-        this.listeners[i](current_state)
+      for (let i = 0; i < this.subscribers.length; i++) {
+        this.subscribers[i](current_state)
       }
     }
   }
@@ -76,6 +76,9 @@ export default class Store {
     }
     this.reducers = this.reducers.concat(reducers)
     return reducers
+  }
+  listen (cb) {
+    if (cb) cb.call(null)
   }
   getState () {
     return this.state
