@@ -119,6 +119,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      });
 	    }
 	  }, {
+	    key: 'getState',
+	    value: function getState() {
+	      return this.state.getState();
+	    }
+	  }, {
 	    key: 'reducer',
 	    value: function reducer(_reducer) {
 	      return this.store.reducer(_reducer);

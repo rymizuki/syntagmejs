@@ -27,6 +27,9 @@ class Syntagme {
       if (cb) cb.call(null)
     })
   }
+  getState () {
+    return this.state.getState()
+  }
   reducer (reducer) {
     return this.store.reducer(reducer)
   }
