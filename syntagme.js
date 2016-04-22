@@ -121,7 +121,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }, {
 	    key: 'getState',
 	    value: function getState() {
-	      return this.state.getState();
+	      return this.store.getState();
 	    }
 	  }, {
 	    key: 'reducer',

@@ -28,7 +28,7 @@ class Syntagme {
     })
   }
   getState () {
-    return this.state.getState()
+    return this.store.getState()
   }
   reducer (reducer) {
     return this.store.reducer(reducer)
