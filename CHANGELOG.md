@@ -1,5 +1,15 @@
+<a name="0.1.1"></a>
+## [0.1.1](https://github.com/rymizuki/syntagmejs/compare/v0.1.0...v0.1.1) (2016-04-26)
+
+
+### Bug Fixes
+
+* **test:** missing karma's config([4484067](https://github.com/rymizuki/syntagmejs/commit/4484067))
+
+
+
 <a name="0.1.0"></a>
-# 0.1.0 (2016-04-26)
+# [0.1.0](https://github.com/rymizuki/syntagmejs/compare/183b5a3...v0.1.0) (2016-04-26)
 
 
 ### Bug Fixes
