@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "precommit": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0; git add CHANGELOG.md"
+  }
+}
