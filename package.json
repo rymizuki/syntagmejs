@@ -2,6 +2,11 @@
   "name": "syntagme",
   "version": "0.1.0",
   "main": "dist/syntagme.min.js",
+  "files": [
+    "dist/syntagme.js",
+    "dist/syntagme.min.js",
+    "src"
+  ],
   "scripts": {
     "bump": "mversion $1 -m '%s'",
     "build": "gulp",
