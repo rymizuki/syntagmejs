@@ -10,7 +10,7 @@ module.exports = {
       ".js"
     ],
     modulesDirectories: [
-      "./script",
+      "./src",
       "./node_modules/",
     ]
   },

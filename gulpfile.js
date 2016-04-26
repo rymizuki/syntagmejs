@@ -12,7 +12,7 @@ gulp.task('script', function () {
   var config  = require('./webpack.conf.js')
   var uglify  = require('gulp-uglify')
   var rename  = require('gulp-rename')
-  return gulp.src('script')
+  return gulp.src('src')
     .pipe(webpack(config))
     .pipe(gulp.dest('dist'))
     .pipe(uglify())
