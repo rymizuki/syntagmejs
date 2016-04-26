@@ -1,0 +1,24 @@
+{
+  "name": "syntagme",
+  "description": "Syntagme is a flux's flamework.",
+  "main": "dist/syntagme.min.js",
+  "authors": [
+    "mizuki_r"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "flux",
+    "syntagme"
+  ],
+  "homepage": "https://github.com/rymizuki/syntagmejs",
+  "ignore": [
+    ".*",
+    "coverage",
+    "examples",
+    "node_modules",
+    "test",
+    "gulpfile.js",
+    "karma.conf.coffee",
+    "webpack.conf.js"
+  ]
+}
