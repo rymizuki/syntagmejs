@@ -10,9 +10,14 @@ var test_files = [
 gulp.task('script', function () {
   var webpack = require('webpack-stream')
   var config  = require('./webpack.conf.js')
+  var uglify  = require('gulp-uglify')
+  var rename  = require('gulp-rename')
   return gulp.src('script')
     .pipe(webpack(config))
-    .pipe(gulp.dest('.'))
+    .pipe(gulp.dest('dist'))
+    .pipe(uglify())
+    .pipe(rename({suffix: '.min'}))
+    .pipe(gulp.dest('dist'))
 })
 
 gulp.task('test', ['script'], function () {
