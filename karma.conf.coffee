@@ -60,7 +60,7 @@ module.exports = (config) ->
     webpack:
       resolve:
         extensions: ['', '.js']
-        modulesDirectories: ['script']
+        modulesDirectories: ['src']
       module:
         loaders: [
           {test: /\.js$/, exclude: /node_modules/, loader: 'babel?presets[]=es2015'}
