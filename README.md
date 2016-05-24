@@ -2,12 +2,24 @@
 
 Syntagme is a flux's flamework.
 
+[![npm version](https://badge.fury.io/js/syntagme.svg)](http://badge.fury.io/js/syntagme)
+[![Bower version](https://badge.fury.io/bo/syntagme.svg)](http://badge.fury.io/bo/syntagme)
 [![Build Status](https://travis-ci.org/rymizuki/syntagmejs.svg?branch=master)](https://travis-ci.org/rymizuki/syntagmejs)
 [![Codacy Badge](https://api.codacy.com/project/badge/grade/906eea6b21ab40359f7d325e30a495bf)](https://www.codacy.com/app/ry-mizuki/syntagmejs)
 [![Codacy Badge](https://api.codacy.com/project/badge/coverage/906eea6b21ab40359f7d325e30a495bf)](https://www.codacy.com/app/ry-mizuki/syntagmejs)
 [![Dependency Status](https://gemnasium.com/rymizuki/syntagmejs.svg)](https://gemnasium.com/rymizuki/syntagmejs)
 
 ## Installation
+
+[bower](http://bower.io/):
+```
+bower install --save syntagme
+```
+
+[npm](https://www.npmjs.com/):
+```
+npm install --save syntagme
+```
 
 ## Example
 
