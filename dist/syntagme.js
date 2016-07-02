@@ -293,7 +293,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var state = this.reducers[i](payload, previous_state);
 	        if (state) current_state = state;
 	      }
-	      if (this.state != current_state) {
+	      if (current_state && this.state != current_state) {
 	        this.state = current_state;
 	        for (var _i = 0; _i < this.subscribers.length; _i++) {
 	          this.subscribers[_i](current_state);

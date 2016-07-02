@@ -54,7 +54,7 @@ export default class Store {
       let state = this.reducers[i](payload, previous_state)
       if (state) current_state = state
     }
-    if (this.state != current_state) {
+    if (current_state && this.state != current_state) {
       this.state = current_state
       for (let i = 0; i < this.subscribers.length; i++) {
         this.subscribers[i](current_state)
