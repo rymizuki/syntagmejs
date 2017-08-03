@@ -1,3 +1,5 @@
+const path = require('path')
+
 module.exports = {
   entry: "syntagme",
   output: {
@@ -9,14 +11,18 @@ module.exports = {
     extensions: [
       ".js"
     ],
-    modulesDirectories: [
-      "./src",
-      "./node_modules/",
+    modules: [
+      path.join(__dirname, "src"),
+      "node_modules",
     ]
   },
   module: {
-    loaders: [
-      {test: /\.js$/, exclude: /node_modules/, loader: 'babel?presets[]=es2015'},
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader'
+      },
     ]
   },
   plugins: [],
