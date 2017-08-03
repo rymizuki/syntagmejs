@@ -1,3 +1,5 @@
+path = require('path')
+
 module.exports = (config) ->
   config.set
     # base path that will be used to resolve all patterns (eg. files, exclude)
@@ -11,6 +13,10 @@ module.exports = (config) ->
 
     # list of files / partterns to load in the browser
     files: [
+      'node_modules/sinon-browser-only/sinon.js',
+      'node_modules/power-assert/build/power-assert.js',
+      'node_modules/q/q.js',
+      'test/index.js'
     ]
 
     # list of files to exclude
@@ -59,20 +65,27 @@ module.exports = (config) ->
 
     webpack:
       resolve:
-        extensions: ['', '.js']
-        modulesDirectories: ['src']
+        extensions: ['.js']
+        modules: [
+          path.join(__dirname, 'src')
+        ]
       module:
-        loaders: [
-          {test: /\.js$/, exclude: /node_modules/, loader: 'babel?presets[]=es2015'}
+        rules: [
+          {
+            test: /\.js$/,
+            exclude: /node_modules/,
+            loader: 'babel-loader'
+          },
+          {
+            enforce: 'post',
+            test: /\.js$/,
+            exclude: /(test|node_modules)/,
+            loader: 'istanbul-instrumenter-loader'
+          }
         ]
-        postLoaders: [
-          {test: /\.js$/, exclude: /(test|node_modules)/, loader: 'istanbul-instrumenter'}
-        ]
-
 
     coverageReporter:
       reporters: [
         { type: 'text' },
-        { type: 'lcov', subdir: 'report-lcov' },
+        { type: 'lcovonly', subdir: 'report-lcovonly' },
       ]
-

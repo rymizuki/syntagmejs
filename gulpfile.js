@@ -1,4 +1,5 @@
 var gulp = require('gulp')
+var path = require('path')
 
 var test_files = [
   'node_modules/sinon-browser-only/sinon.js',
@@ -8,36 +9,35 @@ var test_files = [
 ]
 
 gulp.task('script', function () {
-  var webpack = require('webpack-stream')
-  var config  = require('./webpack.conf.js')
+  var webpack = require('webpack')
+  var stream  = require('webpack-stream')
+  var config  = require('./webpack.config.js')
   var uglify  = require('gulp-uglify')
   var rename  = require('gulp-rename')
-  return gulp.src('src')
-    .pipe(webpack(config))
+  return stream(config, webpack)
     .pipe(gulp.dest('dist'))
     .pipe(uglify())
     .pipe(rename({suffix: '.min'}))
     .pipe(gulp.dest('dist'))
 })
 
-gulp.task('test', ['script'], function () {
-  var karma = require('gulp-karma')
-  gulp.src(test_files)
-    .pipe(karma({
-      configFile: __dirname + '/karma.conf.coffee',
-      action: 'run',
-      browsers: ['PhantomJS'],
-    }))
+gulp.task('test', ['script'], function (done) {
+  var Server = require('karma').Server
+  return new Server({
+    configFile: __dirname + '/karma.conf.coffee',
+    singleRun: true,
+    browsers: ['PhantomJS'],
+  }, done)
+    .start()
 })
 
-gulp.task('test-browsers', function () {
-  var karma = require('gulp-karma')
-  gulp.src(test_files)
-    .pipe(karma({
-      configFile: __dirname + '/karma.conf.coffee',
-      action: 'watch',
-      browsers: ['PhantomJS', 'Chrome', 'Safari'],
-    }))
+gulp.task('test-browsers', function (done) {
+  var Server = require('karma').Server
+  return new Server({
+    configFile: path.join(__dirname, 'karma.conf.coffee'),
+    browsers: ['PhantomJS', 'Chrome', 'Safari'],
+  }, done)
+    .start()
 })
 
 gulp.task('examples', function () {
