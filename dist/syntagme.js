@@ -52,7 +52,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
@@ -84,7 +84,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var Syntagme = function () {
 	  function Syntagme() {
-	    var args = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	    var args = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
 	    _classCallCheck(this, Syntagme);
 
@@ -158,9 +158,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = syntagme;
 	module.exports.Syntagme = Syntagme;
 
-/***/ },
+/***/ }),
 /* 1 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	'use strict';
 
@@ -214,9 +214,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports.default = Dispatcher;
 
-/***/ },
+/***/ }),
 /* 2 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	'use strict';
 
@@ -335,9 +335,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	exports.default = Store;
 
-/***/ },
+/***/ }),
 /* 3 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	'use strict';
 
@@ -351,9 +351,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	};
 
-/***/ },
+/***/ }),
 /* 4 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	'use strict';
 
@@ -361,7 +361,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  value: true
 	});
 
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 	exports.default = actionCreator;
 	function actionCreator(type, stuff) {
@@ -404,13 +404,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return result;
 	}
 
-/***/ },
+/***/ }),
 /* 5 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	"use strict";
 
-/***/ }
+/***/ })
 /******/ ])
 });
 ;
