@@ -118,9 +118,7 @@ var Syntagme = function () {
   _createClass(Syntagme, [{
     key: 'connect',
     value: function connect() {
-      this.dispatcher.register(function () {
-        this.store.handle.apply(this.store, arguments);
-      });
+      this.dispatcher.register(this.store.handle.bind(this.store));
       this.connected_fg = true;
     }
   }, {

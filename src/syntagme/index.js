@@ -29,9 +29,7 @@ class Syntagme {
     this.connect()
   }
   connect () {
-    this.dispatcher.register(function () {
-      this.store.handle.apply(this.store, arguments)
-    })
+    this.dispatcher.register(this.store.handle.bind(this.store))
     this.connected_fg = true
   }
   subscribe(subscriber: Subscriber) {
