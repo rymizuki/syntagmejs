@@ -1,10 +1,18 @@
-export default function actionCreator (type, stuff) {
+// @flow
+
+import type {
+  Action,
+  ActionCreator,
+  ActionPromise,
+} from '../types'
+
+export default function actionCreator (type: string, stuff: ActionCreator) :ActionPromise | void {
   if ('function' === typeof stuff) {
     this.dispatch({
       source: 'ASYNC_ACTION',
       action: { type }
     })
-    var result = stuff()
+    var result: ActionPromise = stuff()
     if (null == result || 'function' !== typeof result.then) {
       throw new Error('Action must be return promise object.')
     }
@@ -35,5 +43,4 @@ export default function actionCreator (type, stuff) {
     }
     this.dispatch({ source: 'ACTION', action: stuff, })
   }
-  return result
 }

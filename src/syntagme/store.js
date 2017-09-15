@@ -1,54 +1,31 @@
-function includes (array, element) {
-  if (Array.prototype.includes) {
-    return array.includes(element)
-  } else {
-    // XXX: Polyfil
-    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes
-    var O = Object(array);
-    var len = parseInt(O.length) || 0;
-    if (len === 0) {
-      return false;
-    }
-    var n = 0;
-    var k;
-    if (n >= 0) {
-      k = n;
-    } else {
-      k = len + n;
-      if (k < 0) { k = 0; }
-    }
-    var currentElement;
-    while (k < len) {
-      currentElement = O[k];
-      if (element === currentElement ||
-         (element !== element && currentElement !== currentElement)) { // NaN !== NaN
-        return true;
-      }
-      k++;
-    }
-    return false;
-  }
-}
+// @flow
 
-function remove (array, element) {
-  let clone = array
-  let index = array.indexOf(element)
-  if (index) {
-    clone.splice(array.indexOf(element), 1)
-  }
-  return clone
-}
+import type {
+  Subscriber,
+  Reducer,
+  Payload,
+  State,
+  Listener,
+} from '../types'
+
+import includes from './utils/includes'
+import remove   from './utils/remove'
+
+type Reducers = Array<Reducer>
 
 export default class Store {
+  subscribers: Array<Subscriber>
+  reducers: Reducers
+  state: State
   constructor () {
     this.subscribers = []
     this.reducers  = []
   }
-  subscribe (fn) {
-    this.subscribers.push(fn)
+  subscribe (subscriber: Subscriber) {
+    this.subscribers.push(subscriber)
   }
-  handle (payload) {
-    var current_state = null
+  handle (payload: Payload) {
+    var current_state: ?State = null
     for (let i = 0; i < this.reducers.length; i++) {
       let previous_state = current_state || this.state
       let state = this.reducers[i](payload, previous_state)
@@ -61,26 +38,24 @@ export default class Store {
       }
     }
   }
-  reducer (reducers) {
-    if (!Array.isArray(reducers)) {
-      reducers = [reducers]
-    }
+  reducer (stuff: Reducer | Reducers): Reducers {
+    const reducers: Reducers = Array.isArray(stuff) ? stuff : [ stuff ]
     for (let i = 0; i < reducers.length; i++) {
       let reducer = reducers[i]
       if ('function' != typeof reducer) {
         throw new Error('Reducer may be not function')
       }
       if (includes(this.reducers, reducer)) {
-        this.reducers = remove(this.reudcers, reducer)
+        this.reducers = remove(this.reducers, reducer)
       }
     }
     this.reducers = this.reducers.concat(reducers)
     return reducers
   }
-  listen (cb) {
-    if (cb) cb.call(null)
+  listen (listener: Listener) {
+    if (listener) listener.call(null)
   }
-  getState () {
+  getState (): State {
     return this.state
   }
 }
