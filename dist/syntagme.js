@@ -90,17 +90,13 @@ var _store = __webpack_require__(2);
 
 var _store2 = _interopRequireDefault(_store);
 
-var _config = __webpack_require__(3);
+var _config = __webpack_require__(5);
 
 var _config2 = _interopRequireDefault(_config);
 
-var _actionCreator = __webpack_require__(4);
+var _actionCreator = __webpack_require__(6);
 
 var _actionCreator2 = _interopRequireDefault(_actionCreator);
-
-var _utils = __webpack_require__(5);
-
-var _utils2 = _interopRequireDefault(_utils);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -114,7 +110,6 @@ var Syntagme = function () {
 
     this.store = args.store || new _store2.default();
     this.dispatcher = args.dispatcher || new _dispatcher2.default();
-    this.utils = _utils2.default;
     this.config = _config2.default;
     this.listening_fg = false;
     this.connect();
@@ -128,18 +123,21 @@ var Syntagme = function () {
     }
   }, {
     key: 'subscribe',
-    value: function subscribe(fn) {
-      this.store.subscribe(fn);
+    value: function subscribe(subscriber) {
+      this.store.subscribe(subscriber);
     }
   }, {
     key: 'listen',
-    value: function listen(cb) {
+    value: function listen(listener) {
       var _this = this;
 
       this.store.listen(function () {
         _this.listening_fg = true;
-        _this.dispatcher.dispatch({ source: 'SYNTAGME', action: { type: 'INIT' } });
-        if (cb) cb.call(null);
+        _this.dispatcher.dispatch({
+          source: 'SYNTAGME',
+          action: { type: 'INIT' }
+        });
+        if (listener) listener.call(null);
       });
     }
   }, {
@@ -162,13 +160,13 @@ var Syntagme = function () {
     }
   }, {
     key: 'handleAction',
-    value: function handleAction(type, fn) {
-      return _actionCreator2.default.call(this, type, fn);
+    value: function handleAction(type, actionCreator) {
+      return _actionCreator2.default.call(this, type, actionCreator);
     }
   }, {
     key: 'ac',
-    value: function ac(type, fn) {
-      return this.handleAction(type, fn);
+    value: function ac(type, actionCreator) {
+      return this.handleAction(type, actionCreator);
     }
   }]);
 
@@ -229,8 +227,8 @@ var Dispatcher = function () {
     }
   }, {
     key: 'register',
-    value: function register(fn) {
-      this.handlers.push(fn);
+    value: function register(handler) {
+      this.handlers.push(handler);
     }
   }]);
 
@@ -252,8 +250,91 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _includes = __webpack_require__(3);
+
+var _includes2 = _interopRequireDefault(_includes);
+
+var _remove = __webpack_require__(4);
+
+var _remove2 = _interopRequireDefault(_remove);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+var Store = function () {
+  function Store() {
+    _classCallCheck(this, Store);
+
+    this.subscribers = [];
+    this.reducers = [];
+  }
+
+  _createClass(Store, [{
+    key: 'subscribe',
+    value: function subscribe(subscriber) {
+      this.subscribers.push(subscriber);
+    }
+  }, {
+    key: 'handle',
+    value: function handle(payload) {
+      var current_state = null;
+      for (var i = 0; i < this.reducers.length; i++) {
+        var previous_state = current_state || this.state;
+        var state = this.reducers[i](payload, previous_state);
+        if (state) current_state = state;
+      }
+      if (current_state && this.state != current_state) {
+        this.state = current_state;
+        for (var _i = 0; _i < this.subscribers.length; _i++) {
+          this.subscribers[_i](current_state);
+        }
+      }
+    }
+  }, {
+    key: 'reducer',
+    value: function reducer(stuff) {
+      var reducers = Array.isArray(stuff) ? stuff : [stuff];
+      for (var i = 0; i < reducers.length; i++) {
+        var reducer = reducers[i];
+        if ('function' != typeof reducer) {
+          throw new Error('Reducer may be not function');
+        }
+        if ((0, _includes2.default)(this.reducers, reducer)) {
+          this.reducers = (0, _remove2.default)(this.reducers, reducer);
+        }
+      }
+      this.reducers = this.reducers.concat(reducers);
+      return reducers;
+    }
+  }, {
+    key: 'listen',
+    value: function listen(listener) {
+      if (listener) listener.call(null);
+    }
+  }, {
+    key: 'getState',
+    value: function getState() {
+      return this.state;
+    }
+  }]);
+
+  return Store;
+}();
+
+exports.default = Store;
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = includes;
 function includes(array, element) {
   if (Array.prototype.includes) {
     return array.includes(element);
@@ -288,6 +369,17 @@ function includes(array, element) {
   }
 }
 
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = remove;
 function remove(array, element) {
   var clone = array;
   var index = array.indexOf(element);
@@ -297,72 +389,8 @@ function remove(array, element) {
   return clone;
 }
 
-var Store = function () {
-  function Store() {
-    _classCallCheck(this, Store);
-
-    this.subscribers = [];
-    this.reducers = [];
-  }
-
-  _createClass(Store, [{
-    key: 'subscribe',
-    value: function subscribe(fn) {
-      this.subscribers.push(fn);
-    }
-  }, {
-    key: 'handle',
-    value: function handle(payload) {
-      var current_state = null;
-      for (var i = 0; i < this.reducers.length; i++) {
-        var previous_state = current_state || this.state;
-        var state = this.reducers[i](payload, previous_state);
-        if (state) current_state = state;
-      }
-      if (current_state && this.state != current_state) {
-        this.state = current_state;
-        for (var _i = 0; _i < this.subscribers.length; _i++) {
-          this.subscribers[_i](current_state);
-        }
-      }
-    }
-  }, {
-    key: 'reducer',
-    value: function reducer(reducers) {
-      if (!Array.isArray(reducers)) {
-        reducers = [reducers];
-      }
-      for (var i = 0; i < reducers.length; i++) {
-        var reducer = reducers[i];
-        if ('function' != typeof reducer) {
-          throw new Error('Reducer may be not function');
-        }
-        if (includes(this.reducers, reducer)) {
-          this.reducers = remove(this.reudcers, reducer);
-        }
-      }
-      this.reducers = this.reducers.concat(reducers);
-      return reducers;
-    }
-  }, {
-    key: 'listen',
-    value: function listen(cb) {
-      if (cb) cb.call(null);
-    }
-  }, {
-    key: 'getState',
-    value: function getState() {
-      return this.state;
-    }
-  }]);
-
-  return Store;
-}();
-
-exports.default = Store;
-
 /***/ }),
-/* 3 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -379,7 +407,7 @@ exports.default = {
 };
 
 /***/ }),
-/* 4 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -429,15 +457,7 @@ function actionCreator(type, stuff) {
     }
     this.dispatch({ source: 'ACTION', action: stuff });
   }
-  return result;
 }
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
 
 /***/ })
 /******/ ]);

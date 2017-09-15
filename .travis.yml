@@ -2,5 +2,8 @@ language: node_js
 node_js:
   - v6.11
   - v8.2
+script:
+  - yarn flow
+  - yarn test
 after_script:
-  - npm run coverage
+  - yarn coverage

@@ -1,3 +1,5 @@
+// @flow
+
 export default {
   prefix: {
     RESOLVE: '_RESOLVE',
