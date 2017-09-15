@@ -5,11 +5,6 @@ describe('syntagme', function () {
   beforeEach(function () {
     stuff = syntagme()
   })
-  describe('.utils', function () {
-    it('should be object', function () {
-      assert.equal(typeof stuff.utils, 'object')
-    })
-  })
   describe('.config', function () {
     it('should be object', function () {
       assert.equal(typeof stuff.config, 'object')
