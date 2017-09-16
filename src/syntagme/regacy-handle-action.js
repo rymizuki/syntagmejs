@@ -1,12 +1,12 @@
-// @flow
-
 import type {
-  Action,
-  ActionCreator,
+  ActionCreatorFunc,
   ActionPromise,
-} from '../types'
+} from 'types'
 
-export default function actionCreator (type: string, stuff: ActionCreator) :ActionPromise | void {
+export default function actionCreator (
+  type:  string,
+  stuff: ActionCreatorFunc
+  ) :ActionPromise | void {
   if ('function' === typeof stuff) {
     this.dispatch({
       source: 'ASYNC_ACTION',
