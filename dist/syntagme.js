@@ -122,11 +122,6 @@ var Syntagme = function () {
       this.connected_fg = true;
     }
   }, {
-    key: 'subscribe',
-    value: function subscribe(subscriber) {
-      this.store.subscribe(subscriber);
-    }
-  }, {
     key: 'listen',
     value: function listen(listener) {
       var _this = this;
@@ -139,6 +134,11 @@ var Syntagme = function () {
         });
         if (listener) listener.call(null);
       });
+    }
+  }, {
+    key: 'subscribe',
+    value: function subscribe(subscriber) {
+      this.store.subscribe(subscriber);
     }
   }, {
     key: 'getState',
@@ -315,7 +315,7 @@ var Store = function () {
   }, {
     key: 'getState',
     value: function getState() {
-      return this.state;
+      return this.state || null;
     }
   }]);
 

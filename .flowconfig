@@ -3,9 +3,13 @@
 
 [include]
 ./src/
+./test/
 
 [libs]
+./flow-typed/
 
 [lints]
 
 [options]
+module.system.node.resolve_dirname=src
+module.name_mapper='^sinon-browser-only' -> 'sinon'

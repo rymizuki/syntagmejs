@@ -1,6 +1,7 @@
 /node_modules/
 /bower_components/
 /coverage/
+/flow-typed/
 /.node-version
 .DS_Store
 *.swp
