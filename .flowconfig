@@ -9,3 +9,4 @@
 [lints]
 
 [options]
+module.system.node.resolve_dirname=src

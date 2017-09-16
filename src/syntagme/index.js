@@ -13,7 +13,7 @@ import type {
 import Dispatcher   from './dispatcher'
 import Store        from './store'
 import config       from './config'
-import createAction from './action-creator'
+import handleAction from './regacy-handle-action'
 
 class Syntagme {
   store: Store
@@ -22,8 +22,8 @@ class Syntagme {
   listening_fg: boolean
   connected_fg: boolean
   constructor (args: Object = {}) {
-    this.store      = args.store      || new Store
-    this.dispatcher = args.dispatcher || new Dispatcher
+    this.store      = args.store          || new Store
+    this.dispatcher = args.dispatcher     || new Dispatcher
     this.config     = config
     this.listening_fg = false
     this.connect()
@@ -58,12 +58,11 @@ class Syntagme {
     this.dispatcher.dispatch(payload)
   }
   handleAction (type: string, actionCreator: ActionCreator) {
-    return createAction.call(this, type, actionCreator)
+    return handleAction.call(this, type, actionCreator)
   }
   ac (type: string, actionCreator: ActionCreator) {
     return this.handleAction(type, actionCreator)
   }
-
 }
 
 function syntagme () :Syntagme {
