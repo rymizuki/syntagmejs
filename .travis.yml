@@ -4,6 +4,7 @@ node_js:
   - v8.2
 before_script:
   - yarn install
+  - yarn flow-typed install
 script:
   - yarn flow
   - yarn test
