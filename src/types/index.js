@@ -1,6 +1,7 @@
 // @flow
 
 export type Reducer = (payload: Payload, state: State) => State
+export type Reducers = Array<Reducer>
 
 export type Config = {
   prefix: Object,

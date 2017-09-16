@@ -1,8 +1,17 @@
-var syntagme = require('syntagme')
+// @flow
+
+import assert from 'power-assert'
+import sinon  from 'sinon'
+import Q      from 'q'
+
+import syntagme from 'syntagme'
+
+import type { SinonStub } from 'sinon'
+const { Syntagme } = syntagme
 
 describe('syntagme.dispatch', function () {
-  var handler
-  var stuff
+  let handler: SinonStub
+  let stuff:   Syntagme
   beforeEach(function (done) {
     stuff = syntagme()
     handler = sinon.stub()
@@ -12,7 +21,7 @@ describe('syntagme.dispatch', function () {
   describe('execute with payload', function () {
     beforeEach(function () {
       stuff.dispatch({
-        source: 'TEST',
+        source: 'ACTION',
         action: {type: 'TEST_ACTION'}
       })
     })
@@ -29,17 +38,10 @@ describe('syntagme.dispatch', function () {
           action: {type: 'INIT'},
         }, handler.args[0][0])
         assert.deepEqual({
-          source: 'TEST',
+          source: 'ACTION',
           action: {type: 'TEST_ACTION'},
         }, handler.args[1][0])
       })
-    })
-  })
-  describe('execute without action.type', function () {
-    it('should be throw exception', function () {
-      assert.throws(function () {
-        stuff.dispatch({})
-      }, /ActionType is not defined/)
     })
   })
 })

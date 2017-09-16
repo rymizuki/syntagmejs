@@ -3,6 +3,7 @@
 import type {
   Subscriber,
   Reducer,
+  Reducers,
   Payload,
   State,
   Listener,
@@ -10,8 +11,6 @@ import type {
 
 import includes from './utils/includes'
 import remove   from './utils/remove'
-
-type Reducers = Array<Reducer>
 
 export default class Store {
   subscribers: Array<Subscriber>
@@ -25,10 +24,10 @@ export default class Store {
     this.subscribers.push(subscriber)
   }
   handle (payload: Payload) {
-    var current_state: ?State = null
+    let current_state: ?State = null
     for (let i = 0; i < this.reducers.length; i++) {
-      let previous_state = current_state || this.state
-      let state = this.reducers[i](payload, previous_state)
+      const previous_state = current_state || this.state
+      const state = this.reducers[i](payload, previous_state)
       if (state) current_state = state
     }
     if (current_state && this.state != current_state) {
@@ -38,10 +37,10 @@ export default class Store {
       }
     }
   }
-  reducer (stuff: Reducer | Reducers): Reducers {
+  reducer (stuff: (Reducer | Reducers)): Reducers {
     const reducers: Reducers = Array.isArray(stuff) ? stuff : [ stuff ]
     for (let i = 0; i < reducers.length; i++) {
-      let reducer = reducers[i]
+      const reducer = reducers[i]
       if ('function' != typeof reducer) {
         throw new Error('Reducer may be not function')
       }
@@ -56,6 +55,6 @@ export default class Store {
     if (listener) listener.call(null)
   }
   getState (): State {
-    return this.state
+    return this.state || null
   }
 }

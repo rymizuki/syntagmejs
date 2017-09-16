@@ -3,9 +3,12 @@
 
 [include]
 ./src/
+./test/
 
 [libs]
+./flow-typed/
 
 [lints]
 
 [options]
+module.system.node.resolve_dirname=src
