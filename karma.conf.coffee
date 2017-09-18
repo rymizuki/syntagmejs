@@ -16,7 +16,7 @@ module.exports = (config) ->
       'node_modules/sinon-browser-only/sinon.js',
       'node_modules/power-assert/build/power-assert.js',
       'node_modules/q/q.js',
-      'test/index.js'
+      'test/**/*.js'
     ]
 
     # list of files to exclude
@@ -26,7 +26,7 @@ module.exports = (config) ->
     # preprocess matching files before serving them to the browser
     # available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-      'test/index.js': ['webpack']
+      'test/**/*.js': ['webpack']
     }
 
     # test results reporter to use
@@ -67,7 +67,8 @@ module.exports = (config) ->
       resolve:
         extensions: ['.js']
         modules: [
-          path.join(__dirname, 'src')
+          path.join(__dirname, 'src'),
+          'node_modules'
         ]
       module:
         rules: [

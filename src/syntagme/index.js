@@ -2,13 +2,14 @@
 
 import type {
   Reducer,
+  Reducers,
   Config,
   State,
   Payload,
   Subscriber,
   Listener,
   ActionCreator,
-} from '../types'
+} from 'types'
 
 import Dispatcher   from './dispatcher'
 import Store        from './store'
@@ -32,10 +33,7 @@ class Syntagme {
     this.dispatcher.register(this.store.handle.bind(this.store))
     this.connected_fg = true
   }
-  subscribe(subscriber: Subscriber) {
-    this.store.subscribe(subscriber)
-  }
-  listen (listener: Listener) {
+  listen (listener?: Listener) {
     this.store.listen(() => {
       this.listening_fg = true
       this.dispatcher.dispatch({
@@ -45,10 +43,13 @@ class Syntagme {
       if (listener) listener.call(null)
     })
   }
+  subscribe(subscriber: Subscriber) {
+    this.store.subscribe(subscriber)
+  }
   getState () :State {
     return this.store.getState()
   }
-  reducer (reducer: Reducer) {
+  reducer (reducer: (Reducer | Reducers)) {
     return this.store.reducer(reducer)
   }
   dispatch (payload: Payload) {

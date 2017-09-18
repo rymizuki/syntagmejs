@@ -1,14 +1,25 @@
-var syntagme = require('syntagme')
+// @flow
+
+import assert from 'power-assert'
+import sinon  from 'sinon'
+import Q      from 'q'
+
+import syntagme from 'syntagme'
+
+import type { SinonStub } from 'sinon'
+const { Syntagme } = syntagme
 
 describe('syntagme.reducer', function () {
   beforeEach(function () {
     this.syntagme = syntagme()
   })
   describe('single reduce', function () {
-    var subscriber
+    let stub: SinonStub
     beforeEach(function (done) {
-      subscriber = sinon.stub()
-      this.syntagme.subscribe(subscriber)
+      stub = sinon.stub()
+      this.syntagme.subscribe(function (state) {
+        stub(state)
+      })
       this.syntagme.reducer(function (payload, previous) {
         previous || (previous = {})
         if (payload.action.type == 'TEST')
@@ -28,24 +39,26 @@ describe('syntagme.reducer', function () {
         })
         describe('called', function () {
           it('should be true', function () {
-            assert.ok(subscriber.calledTwice)
+            assert.ok(stub.calledTwice)
           })
         })
         describe('state', function () {
           it('should be reduced', function () {
             assert.deepEqual({
               count: 1
-            }, subscriber.args[1][0])
+            }, stub.args[1][0])
           })
         })
       })
     })
   })
   describe('multiple reduce', function () {
-    var subscriber
+    let stub: SinonStub
     beforeEach(function (done) {
-      subscriber = sinon.stub()
-      this.syntagme.subscribe(subscriber)
+      stub = sinon.stub()
+      this.syntagme.subscribe(function (state) {
+        stub(state)
+      })
       this.syntagme.reducer(function (payload, previous) {
         if (payload.action.type !== 'TEST_1') return
         previous || (previous = {})
@@ -77,7 +90,7 @@ describe('syntagme.reducer', function () {
       })
       describe('called', function () {
         it('should be true', function () {
-          assert.ok(subscriber.calledOnce)
+          assert.ok(stub.calledOnce)
         })
       })
       describe('state', function () {
@@ -86,16 +99,16 @@ describe('syntagme.reducer', function () {
             reducer1: true,
             reducer2: true,
             count: 2,
-          }, subscriber.args[0][0])
+          }, stub.args[0][0])
         })
       })
     })
   })
   describe('order reduce', function () {
-    var subscriber
+    let stub: SinonStub
     beforeEach(function (done) {
-      subscriber = sinon.stub()
-      this.syntagme.subscribe(subscriber)
+      stub = sinon.stub()
+      this.syntagme.subscribe(function (state) { stub(state) })
       this.syntagme.reducer([
         function (payload, previous) {
           previous || (previous = {})
@@ -130,7 +143,7 @@ describe('syntagme.reducer', function () {
       })
       describe('called', function () {
         it('should be true', function () {
-          assert.ok(subscriber.calledOnce)
+          assert.ok(stub.calledOnce)
         })
       })
       describe('state', function () {
@@ -140,7 +153,7 @@ describe('syntagme.reducer', function () {
             reducer2: true,
             reducer3: true,
             count: 3,
-          }, subscriber.args[0][0])
+          }, stub.args[0][0])
         })
       })
     })
