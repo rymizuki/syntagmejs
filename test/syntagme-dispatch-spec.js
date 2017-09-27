@@ -15,14 +15,14 @@ describe('syntagme.dispatch', function () {
   beforeEach(function (done) {
     stuff = syntagme()
     handler = sinon.stub()
-    stuff.dispatcher.register(handler)
+    stuff.actionHandler.dispatcher.register(handler)
     stuff.listen(done)
   })
   describe('execute with payload', function () {
     beforeEach(function () {
       stuff.dispatch({
         source: 'ACTION',
-        action: {type: 'TEST_ACTION'}
+        action: {type: 'TEST_ACTION', data: {}}
       })
     })
 
@@ -35,11 +35,11 @@ describe('syntagme.dispatch', function () {
       it('should be equal', function () {
         assert.deepEqual({
           source: 'SYNTAGME',
-          action: {type: 'INIT'},
+          action: {type: 'INIT', data: {}},
         }, handler.args[0][0])
         assert.deepEqual({
           source: 'ACTION',
-          action: {type: 'TEST_ACTION'},
+          action: {type: 'TEST_ACTION', data: {}},
         }, handler.args[1][0])
       })
     })

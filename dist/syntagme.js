@@ -80,23 +80,56 @@ return /******/ (function(modules) { // webpackBootstrap
 "use strict";
 
 
+var _syntagme = __webpack_require__(1);
+
+var _syntagme2 = _interopRequireDefault(_syntagme);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function syntagme() {
+  return new _syntagme2.default();
+}
+
+
+module.exports = syntagme;
+module.exports.Syntagme = _syntagme2.default;
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _dispatcher = __webpack_require__(1);
+var _dispatcher = __webpack_require__(2);
 
 var _dispatcher2 = _interopRequireDefault(_dispatcher);
 
-var _store = __webpack_require__(2);
+var _store = __webpack_require__(3);
 
 var _store2 = _interopRequireDefault(_store);
 
-var _config = __webpack_require__(5);
+var _config = __webpack_require__(6);
 
 var _config2 = _interopRequireDefault(_config);
 
-var _actionCreator = __webpack_require__(6);
+var _regacyHandleAction = __webpack_require__(7);
 
-var _actionCreator2 = _interopRequireDefault(_actionCreator);
+var _regacyHandleAction2 = _interopRequireDefault(_regacyHandleAction);
+
+var _actionCreators = __webpack_require__(8);
+
+var _actionCreators2 = _interopRequireDefault(_actionCreators);
+
+var _actionHandler = __webpack_require__(11);
+
+var _actionHandler2 = _interopRequireDefault(_actionHandler);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -109,17 +142,18 @@ var Syntagme = function () {
     _classCallCheck(this, Syntagme);
 
     this.store = args.store || new _store2.default();
-    this.dispatcher = args.dispatcher || new _dispatcher2.default();
+    this.actions = args.actionCreators || new _actionCreators2.default();
+    this.actionHandler = args.actionHandler || new _actionHandler2.default({
+      dispatcher: args.dispatcher || new _dispatcher2.default()
+    });
     this.config = _config2.default;
-    this.listening_fg = false;
     this.connect();
   }
 
   _createClass(Syntagme, [{
     key: 'connect',
     value: function connect() {
-      this.dispatcher.register(this.store.handle.bind(this.store));
-      this.connected_fg = true;
+      this.actionHandler.connect(this.store);
     }
   }, {
     key: 'listen',
@@ -127,11 +161,7 @@ var Syntagme = function () {
       var _this = this;
 
       this.store.listen(function () {
-        _this.listening_fg = true;
-        _this.dispatcher.dispatch({
-          source: 'SYNTAGME',
-          action: { type: 'INIT' }
-        });
+        _this.actionHandler.start();
         if (listener) listener.call(null);
       });
     }
@@ -151,17 +181,33 @@ var Syntagme = function () {
       return this.store.reducer(_reducer);
     }
   }, {
+    key: 'actionCreator',
+    value: function actionCreator(type, ac) {
+      this.actions.register(type, ac);
+    }
+  }, {
+    key: 'action',
+    value: function action(type, args) {
+      var creator = this.actions.find(type);
+      if (creator == null) throw new Error('Action ' + type + ' is not defined.');
+      var payload = creator.create(args || {});
+      return this.actionHandler.dispatch(payload);
+    }
+
+    // regacy api
+
+  }, {
     key: 'dispatch',
     value: function dispatch(payload) {
-      if (!this.listening_fg) {
+      if (!this.actionHandler.isStarted()) {
         throw new Error('syntagme was not listening. call `app.listen()`');
       }
-      this.dispatcher.dispatch(payload);
+      this.actionHandler.dispatcher.dispatch(payload);
     }
   }, {
     key: 'handleAction',
     value: function handleAction(type, actionCreator) {
-      return _actionCreator2.default.call(this, type, actionCreator);
+      return _regacyHandleAction2.default.call(this, type, actionCreator);
     }
   }, {
     key: 'ac',
@@ -173,15 +219,10 @@ var Syntagme = function () {
   return Syntagme;
 }();
 
-function syntagme() {
-  return new Syntagme();
-}
-
-module.exports = syntagme;
-module.exports.Syntagme = Syntagme;
+exports.default = Syntagme;
 
 /***/ }),
-/* 1 */
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -238,7 +279,7 @@ var Dispatcher = function () {
 exports.default = Dispatcher;
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -250,11 +291,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _includes = __webpack_require__(3);
+var _includes = __webpack_require__(4);
 
 var _includes2 = _interopRequireDefault(_includes);
 
-var _remove = __webpack_require__(4);
+var _remove = __webpack_require__(5);
 
 var _remove2 = _interopRequireDefault(_remove);
 
@@ -325,7 +366,7 @@ var Store = function () {
 exports.default = Store;
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -370,7 +411,7 @@ function includes(array, element) {
 }
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -390,7 +431,7 @@ function remove(array, element) {
 }
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -407,7 +448,7 @@ exports.default = {
 };
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -458,6 +499,242 @@ function actionCreator(type, stuff) {
     this.dispatch({ source: 'ACTION', action: stuff });
   }
 }
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _isPromise = __webpack_require__(9);
+
+var _isPromise2 = _interopRequireDefault(_isPromise);
+
+var _isObject = __webpack_require__(10);
+
+var _isObject2 = _interopRequireDefault(_isObject);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var SOURCE_ACTION = 'ACTION';
+var SOURCE_ASYNC_ACTION = 'ASYNC_ACTION';
+var SOURCE_ASYNC_ACTION_RESOLVE = 'ASYNC_ACTION_RESOLVE';
+var SOURCE_ASYNC_ACTION_REJECT = 'ASYNC_ACTION_REJECT';
+
+var ActionCreator = function () {
+  function ActionCreator(type, creator) {
+    var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+    _classCallCheck(this, ActionCreator);
+
+    this.type = type;
+    this.creator = creator;
+    this.options = options;
+  }
+
+  _createClass(ActionCreator, [{
+    key: 'create',
+    value: function create(stuff) {
+      var _this = this;
+
+      var type = this.type;
+      var data = this.creator(stuff);
+
+      var source = (0, _isPromise2.default)(data) ? SOURCE_ASYNC_ACTION : (0, _isObject2.default)(data) ? SOURCE_ACTION : null;
+      if (null == source) throw new Error('ActionCreator mus be returned plain-object or promise.');
+
+      if (source == SOURCE_ASYNC_ACTION) {
+        var promise = data.then(function (response) {
+          return _this.handleResolveAction(response);
+        }).catch(function (rejection) {
+          throw _this.handleRejectAction(rejection);
+        });
+        return this.createPayload(source, type, stuff, promise);
+      } else {
+        return this.createPayload(source, type, data);
+      }
+    }
+  }, {
+    key: 'createPayload',
+    value: function createPayload(source, type, data, promise) {
+      var payload = {
+        source: source,
+        action: { type: type, data: data }
+      };
+      if (promise) payload.promise = promise;
+      return payload;
+    }
+  }, {
+    key: 'handleResolveAction',
+    value: function handleResolveAction(response) {
+      return this.createPayload(SOURCE_ASYNC_ACTION_RESOLVE, this.type + '_RESOLVE', response);
+    }
+  }, {
+    key: 'handleRejectAction',
+    value: function handleRejectAction(rejection) {
+      return this.createPayload(SOURCE_ASYNC_ACTION_REJECT, this.type + '_REJECT', rejection);
+    }
+  }]);
+
+  return ActionCreator;
+}();
+
+var ActionCreators = function () {
+  function ActionCreators() {
+    _classCallCheck(this, ActionCreators);
+
+    this.creators = [];
+  }
+
+  _createClass(ActionCreators, [{
+    key: 'find',
+    value: function find(type) {
+      for (var i = 0; i < this.creators.length; i++) {
+        var creator = this.creators[i];
+        if (creator.type == type) return creator;
+      }
+      return null;
+    }
+  }, {
+    key: 'includes',
+    value: function includes(type) {
+      return !!this.find(type);
+    }
+  }, {
+    key: 'register',
+    value: function register(type, ac) {
+      if (this.includes(type)) throw new Error('Already exists action "' + type + '" in ActionCreator.');
+      this.creators.push(new ActionCreator(type, ac));
+    }
+  }]);
+
+  return ActionCreators;
+}();
+
+exports.default = ActionCreators;
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+exports.default = isPromise;
+function isPromise(stuff) {
+  if ('object' != (typeof stuff === 'undefined' ? 'undefined' : _typeof(stuff))) return false;
+  if ('function' != typeof stuff.then) return false;
+  if ('function' != typeof stuff.catch) return false;
+  return true;
+}
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+exports.default = function (stuff) {
+  if ('object' != (typeof stuff === 'undefined' ? 'undefined' : _typeof(stuff))) return false;
+  if (Array.isArray(stuff)) return false;
+  return stuff;
+};
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var ActionHandler = function () {
+  function ActionHandler(_ref) {
+    var dispatcher = _ref.dispatcher;
+
+    _classCallCheck(this, ActionHandler);
+
+    this.dispatcher = dispatcher;
+    this.connected_fg = false;
+  }
+
+  _createClass(ActionHandler, [{
+    key: 'connect',
+    value: function connect(store) {
+      this.dispatcher.register(store.handle.bind(store));
+      this.connected_fg = true;
+    }
+  }, {
+    key: 'dispatch',
+    value: function dispatch(payload) {
+      var _this = this;
+
+      this.dispatcher.dispatch(payload);
+
+      if (payload.source == 'ASYNC_ACTION' && payload.promise != null) {
+        var promise = payload.promise;
+        delete payload.promise;
+        return promise.then(function (payload) {
+          _this.dispatcher.dispatch(payload);
+          return payload;
+        }).catch(function (payload) {
+          _this.dispatcher.dispatch(payload);
+          throw payload;
+        });
+      }
+    }
+  }, {
+    key: 'start',
+    value: function start() {
+      this.started_fg = true;
+      this.dispatcher.dispatch({
+        source: 'SYNTAGME',
+        action: {
+          type: 'INIT',
+          data: {}
+        }
+      });
+    }
+  }, {
+    key: 'isStarted',
+    value: function isStarted() {
+      return this.started_fg;
+    }
+  }]);
+
+  return ActionHandler;
+}();
+
+exports.default = ActionHandler;
 
 /***/ })
 /******/ ]);
