@@ -9,7 +9,7 @@ export default class ActionHandler {
   dispatcher:   Dispatcher
   connected_fg: boolean
   started_fg:   boolean
-  constructor ({ dispatcher }) {
+  constructor ({ dispatcher }: { dispatcher: Dispatcher }) {
     this.dispatcher = dispatcher
     this.connected_fg = false
   }
