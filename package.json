@@ -59,9 +59,7 @@
   "directories": {
     "test": "test"
   },
-  "dependencies": {
-    "global": "^4.3.2"
-  },
+  "dependencies": {},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rymizuki/syntagmejs.git"
