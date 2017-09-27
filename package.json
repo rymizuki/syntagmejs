@@ -12,7 +12,7 @@
     "build": "gulp",
     "coverage": "cat ./coverage/report-lcovonly/lcov.info | codacy-coverage && rm -rf ./coverage",
     "start": "gulp watch",
-    "test": "gulp test",
+    "test": "flow check; eslint src; gulp test",
     "flow": "flow",
     "flow-typed": "flow-typed"
   },

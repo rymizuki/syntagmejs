@@ -6,7 +6,6 @@ before_script:
   - yarn install
   - yarn flow-typed install
 script:
-  - yarn flow
   - yarn test
 after_script:
   - yarn coverage
