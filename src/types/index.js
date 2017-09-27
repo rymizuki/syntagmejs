@@ -15,20 +15,26 @@ export type Source =  'SYNTAGME'             |
                       'ASYNC_ACTION_RESOLVE' |
                       'ASYNC_ACTION_REJECT'
 
-export type Action = Object
-
-export type Payload = {
-  source: Source,
-  action: Action,
-}
-
 export type Subscriber = (state: State) => void
 export type Listener = () => void
 export type ActionHandler = (payload: Payload) => void
 
 export type ActionCreator = Object | () => Object
 
-export type ActionPromise = {
-  then: (action: Action) => *,
-  catch: (rejection: any) => *,
+export type ActionType = string
+
+export type Action = {
+  type: ActionType,
+  data: Object
+}
+
+export type Payload = {
+  source: Source,
+  action: Action,
+  promise?: PayloadPromise,
+}
+
+export type PayloadPromise = {
+  then: (onResolve: (payload: Payload) => *) => *,
+  catch: (onReject: (payload: Payload) => *) => *,
 }

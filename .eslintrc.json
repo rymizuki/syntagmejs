@@ -1,0 +1,10 @@
+{
+  "parser": "babel-eslint",
+  "plugins": [
+    "flowtype"
+  ],
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "commonjs"
+  }
+}

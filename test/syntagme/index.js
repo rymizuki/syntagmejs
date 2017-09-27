@@ -18,10 +18,10 @@ describe('syntagme', () => {
       assert.ok(app instanceof Syntagme)
     })
     it('should be connected', () => {
-      assert.ok(app.connected_fg)
+      assert.ok(app.actionHandler.connected_fg)
     })
-    it('should not be listen', () => {
-      assert.ok(!app.listening_fg)
+    it('should not be started', () => {
+      assert.ok(!app.actionHandler.isStarted())
     })
     describe('getState', () => {
       it('should be empty', () => {
@@ -33,16 +33,16 @@ describe('syntagme', () => {
     beforeEach(() => {
       app.listen()
     })
-    describe('exec dispatch', () => {
+    describe('exec dispatch', () => { // regacy api
       let spy: SinonSpy
       beforeEach(() => {
-        spy = sinon.spy(app.dispatcher, 'dispatch')
+        spy = sinon.spy(app.actionHandler.dispatcher, 'dispatch')
       })
       afterEach(() => {
         spy.restore()
       })
 
-      let payload = { source: 'ACTION', action: { type: 'TEST' }}
+      let payload = { source: 'ACTION', action: { type: 'TEST', data: {} }}
       beforeEach(() => {
         app.dispatch(payload)
       })
@@ -50,10 +50,10 @@ describe('syntagme', () => {
         assert.deepEqual(spy.args[0][0], payload)
       })
     })
-    describe('exec handleAction', () => {
+    describe('exec handleAction', () => { // regacy api
       let spy: SinonSpy
       beforeEach(() => {
-        spy = sinon.spy(app.dispatcher, 'dispatch')
+        spy = sinon.spy(app.actionHandler.dispatcher, 'dispatch')
       })
       afterEach(() => {
         spy.restore()
@@ -127,6 +127,102 @@ describe('syntagme', () => {
             })
           })
         })
+      })
+    })
+    describe('action', () => {
+      let spy
+      beforeEach(() => {
+        spy = sinon.spy(app.actionHandler.dispatcher, 'dispatch')
+      })
+      describe('register action', () => {
+        describe('sync action', () => {
+          beforeEach(() => {
+            app.actionCreator('TEST', (stuff) => {
+              return stuff
+            })
+          })
+          describe('call action', () => {
+            beforeEach(() => {
+              app.action('TEST', { message: 'test' })
+            })
+            it('should be dispatch action', () => {
+              assert.ok(spy.calledOnce)
+              assert.deepEqual(spy.args[0][0], {
+                source: 'ACTION',
+                action: {
+                  type: 'TEST',
+                  data: { message: 'test' }
+                }
+              })
+            })
+          })
+        })
+        describe('async action', () => {
+          describe('when resolved', () => {
+            beforeEach(() => {
+              app.actionCreator('TEST', () => {
+                return Q.Promise((resolve) => {
+                  resolve({ message: 'test' })
+                })
+              })
+            })
+            beforeEach(() => {
+              return app.action('TEST', { key: 'message' })
+            })
+            it('should be dispatch action', () => {
+              assert.equal(spy.callCount, 2)
+              assert.deepEqual(spy.args[0][0], {
+                source: 'ASYNC_ACTION',
+                action: {
+                  type: 'TEST',
+                  data: { key: 'message' }
+                }
+              })
+            })
+            it('should be dispatch resolve action', () => {
+              assert.deepEqual(spy.args[1][0], {
+                source: 'ASYNC_ACTION_RESOLVE',
+                action: {
+                  type: 'TEST_RESOLVE',
+                  data: { message: 'test' }
+                }
+              })
+            })
+          })
+          describe('when rejected', () => {
+            beforeEach(() => {
+              app.actionCreator('TEST', () => {
+                return Q.Promise((resolve, reject) => {
+                  reject({ message: 'test' })
+                })
+              })
+            })
+            beforeEach((done) => {
+              const result = app.action('TEST', { key: 'message' })
+              result && result.catch(() => {
+                done()
+              })
+            })
+            it('should be dispatch action', () => {
+              assert.equal(spy.callCount, 2)
+              assert.equal(spy.args[0][0].source, 'ASYNC_ACTION')
+              assert.deepEqual(spy.args[0][0].action, {
+                type: 'TEST',
+                data: { key: 'message' }
+              })
+            })
+            it('should be dispatch reject action', () => {
+              assert.equal(spy.args[1][0].source, 'ASYNC_ACTION_REJECT')
+              assert.deepEqual(spy.args[1][0].action, {
+                type: 'TEST_REJECT',
+                data: { message: 'test' }
+              })
+            })
+          })
+        })
+      })
+      describe('missing action', () => {
+        it('should be throw exeception')
       })
     })
     describe('subscribe', () => {

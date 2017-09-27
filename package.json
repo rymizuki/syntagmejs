@@ -28,7 +28,8 @@
     "codacy-coverage": "^1.1.3",
     "coffee-script": "^1.10.0",
     "conventional-changelog-cli": "^1.1.1",
-    "flow-bin": "^0.54.1",
+    "eslint-plugin-flowtype": "^2.36.0",
+    "flow-bin": "^0.55.0",
     "flow-typed": "^2.1.5",
     "gulp": "^3.9.1",
     "gulp-rename": "^1.2.2",
@@ -58,7 +59,9 @@
   "directories": {
     "test": "test"
   },
-  "dependencies": {},
+  "dependencies": {
+    "global": "^4.3.2"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rymizuki/syntagmejs.git"
