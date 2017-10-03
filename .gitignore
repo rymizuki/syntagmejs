@@ -5,3 +5,4 @@
 /.node-version
 .DS_Store
 *.swp
+yarn-error.log
