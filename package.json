@@ -1,6 +1,6 @@
 {
   "name": "syntagme",
-  "version": "0.1.2",
+  "version": "1.0.0",
   "main": "dist/syntagme.min.js",
   "files": [
     "dist/syntagme.js",

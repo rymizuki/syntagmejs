@@ -1,3 +1,20 @@
+<a name="1.0.0"></a>
+# [1.0.0](https://github.com/rymizuki/syntagmejs/compare/v0.1.2...v1.0.0) (2017-10-03)
+
+
+### Bug Fixes
+
+* **action-handler:** fixed missing annotation ([2b5216b](https://github.com/rymizuki/syntagmejs/commit/2b5216b))
+* **package:** remove unused module ([c5d6f85](https://github.com/rymizuki/syntagmejs/commit/c5d6f85))
+* **syntagme:** use function.prototype.bind ([2a43e16](https://github.com/rymizuki/syntagmejs/commit/2a43e16))
+
+
+### Features
+
+* **action:** add ActionCreator and ActionHandler ([13afea0](https://github.com/rymizuki/syntagmejs/commit/13afea0))
+
+
+
 <a name="0.1.2"></a>
 ## [0.1.2](https://github.com/rymizuki/syntagmejs/compare/v0.1.1...v0.1.2) (2016-07-02)
 
